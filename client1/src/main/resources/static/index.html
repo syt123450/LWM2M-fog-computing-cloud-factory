@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LWM2MClientCMS</title>
+    <link rel="stylesheet" href="CSS/bootstrap.min.css">
+    <script src="JS/jquery.min.js"></script>
+    <script src="JS/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="CSS/index.css">
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <nav style="background-color: #d5efff" class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand">LWM2M Client CMS</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a>Registration</a></li>
+                        <li><a href="HTML/bootstrap.html">Bootstrap</a></li>
+                        <li><a href="HTML/sensor.html">Environment Sensor</a></li>
+                        <li><a href="HTML/report.html">Report</a></li>
+                        <li><a href="HTML/payment.html">Payment</a></li>
+                        <li><a href="HTML/workList.html">Check</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+
+        <div class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    New Registration
+                </h4>
+            </header>
+            <div href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">
+                    User Guide
+                </h4>
+                <p class="list-group-item-text">
+                    1. You can input the server name you want to register to. <br>
+                    2. You must have bootstrap information before you register to server.
+                </p>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-3"><h4>Server Name ( required ) :</h4></div>
+                    <div class="col-sm-4">
+                        <div class="input-group">
+                            <input id="newInput" type="text" class="form-control" placeholder="Server Name">
+                            <span class="input-group-btn">
+						<button id="newRegister" class="btn btn-default" type="button">REGISTER</button>
+					</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    Delete Registration
+                </h4>
+            </header>
+            <div href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">
+                    User Guide
+                </h4>
+                <p class="list-group-item-text">
+                    1. You can input the server name you want to delete your registration. <br>
+                    2. You must have register to the server before you delete the registration.
+                </p>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-3"><h4>Server Name ( required ) :</h4></div>
+                    <div class="col-sm-4">
+                        <div class="input-group">
+                        <input id="deInput" type="text" class="form-control" placeholder="Server Name">
+                            <span class="input-group-btn">
+                                <button id="deRegister" class="btn btn-default" type="button">DELETE</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    Update Registration
+                </h4>
+            </header>
+            <div href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">
+                    User Guide
+                </h4>
+                <p class="list-group-item-text">
+                    1. You can input the server name you want to update your registration information. <br>
+                    2. You must have register to the server before you update the registration.<br>
+                    3. If you do not want to change one of the registration information, you can left the input area blank.
+                </p>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-3"><h4>Server Name ( required ) :</h4></div>
+                    <div class="col-sm-4">
+                        <input id="updateName" type="text" class="form-control" placeholder="Server Name">
+                    </div>
+                </div>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-3"><h4>Version ( optional ) :</h4></div>
+                    <div class="col-sm-4">
+                        <input id="updateVersion" type="text" class="form-control" placeholder="Client Version">
+                    </div>
+                </div>
+            </div>
+
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-3"><h4>Binding Mode ( optional ) :</h4></div>
+                    <div class="col-sm-4">
+                        <input id="updateMode" type="text" class="form-control" placeholder="Client Binding Mode">
+                    </div>
+                </div>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="col-sm-offset-3">
+                    <button id="updateRegister" class="btn btn-default" type="button">UPDATE</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    Registration Result
+                </h4>
+            </header>
+            <div id="resultArea" class="list-group-item">
+
+            </div>
+        </div>
+    </main>
+
+</div>
+
+<script>
+
+    $(function () {
+
+        $("#newRegister").click(function () {
+            $.ajax({
+                url: '/CMS/register/new',
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                data: JSON.stringify({"serverName": $("#newInput").val()}),
+                dataType: 'json',
+                success: function (data) {
+                    renderResult(data);
+                }
+            });
+        });
+
+        $("#deRegister").click(function () {
+            $.ajax({
+                url: '/CMS/register/delete',
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                data: JSON.stringify({"serverName": $("#deInput").val()}),
+                dataType: 'json',
+                success: function (data) {
+                    renderResult(data);
+                }
+            });
+        });
+
+        $("#updateRegister").click(function() {
+
+            console.log($("#updateName").val());
+
+            var postBody = {
+                "serverName": $("#updateName").val(),
+                "lifeTime": "",
+                "version": $("#updateVersion").val(),
+                "bindingMode": $("#updateMode").val(),
+                "updateRequestBeans": []
+            };
+
+            $.ajax({
+                url: '/CMS/register/update',
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                data: JSON.stringify(postBody),
+                dataType: 'json',
+                success: function (data) {
+                    renderResult(data);
+                }
+            });
+        });
+
+    });
+
+    function renderResult(data) {
+        var resultArea = $("#resultArea");
+        var p1 = document.createElement("p");
+        $(p1).text("serverName: " + data.serverName);
+        var p2 = document.createElement("p");
+        $(p2).text("clientName: " + data.clientName);
+        var p3 = document.createElement("p");
+        $(p3).text("RegistrationInfo: " + data.registrationInfo);
+        $(resultArea).empty();
+        $(resultArea).append(p1);
+        $(resultArea).append(p2);
+        $(resultArea).append(p3);
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LWM2MServerCMS</title>
+    <link rel="stylesheet" href="../CSS/bootstrap.min.css">
+    <script src="../JS/jquery.min.js"></script>
+    <script src="../JS/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../CSS/check.css">
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <nav style="background-color: #fff7d7" class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand">LWM2M Server CMS</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li><a href="../index.html">Resource Operator</a></li>
+                        <li class="active"><a>Work Management</a></li>
+                        <li><a href="report.html">Report</a></li>
+                        <li><a href="check.html">Check</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+
+        <div class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    Manage LWM2M Client Information
+                </h4>
+            </header>
+            <div href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">
+                    User Guide
+                </h4>
+                <p class="list-group-item-text">
+                    1. You can discover who can accept new Job by click the "Discover" button.<br>
+                    2. You can add job to specific client.<br>
+                    3. You must input all required parameter if you want to add a job. <br>
+                    4. You can delete a job based on a jobID.<br>
+                    5. You can check the workList of one specific client.
+                </p>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-2"><h4>Discover Client:</h4></div>
+                    <div class="col-sm-4">
+                        <button id="discover" class="btn btn-default" type="button">
+                            DISCOVER
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-2"><h4>Add a new Job:</h4></div>
+                    <div class="col-sm-2">
+                        <div class="input-group">
+                            <input id="addColor" type="text" class="form-control" placeholder="Color">
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="input-group">
+                            <input id="addSize" type="text" class="form-control" placeholder="Size">
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="input-group">
+                            <input id="addPattern" type="text" class="form-control" placeholder="Pattern">
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="input-group">
+                            <input id="addNumber" type="text" class="form-control" placeholder="Number">
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="input-group">
+                            <input id="addClientName" type="text" class="form-control" placeholder="ClientName">
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px;" class="col-sm-3">
+                        <button id="add" class="btn btn-default" type="button">ADD</button>
+                    </div>
+                </div>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-2"><h4>Delete a exist Job:</h4></div>
+                    <div class="col-sm-2">
+                        <div class="input-group">
+                            <input id="deleteName" type="text" class="form-control" placeholder="ClientName">
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="input-group">
+                            <input id="deleteID" type="text" class="form-control" placeholder="JobID">
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <button id="delete" class="btn btn-default" type="button">DELETE</button>
+                    </div>
+                </div>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-2"><h4>check workList:</h4></div>
+                    <div class="col-sm-4">
+                        <div class="input-group">
+                            <input id="checkName" type="text" class="form-control" placeholder="Client Name">
+                            <span class="input-group-btn">
+						<button id="check" class="btn btn-default" type="button">
+							CHECK
+						</button>
+					</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="bootInformation" class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    Management Operation Result
+                </h4>
+            </header>
+            <div id="resultArea" class="list-group-item">
+            </div>
+        </div>
+    </main>
+
+</div>
+
+</body>
+
+<script>
+
+    $(function () {
+
+        $("#discover").click(function () {
+            $.ajax({
+                url: '/discover/holder',
+                type: 'GET',
+                async: true,
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    renderDiscoverInfo(data);
+                }
+            });
+        });
+
+        $("#add").click(function () {
+            var postBody = {
+                "clientName": $("#addClientName").val(),
+                "mugColor": $("#addColor").val(),
+                "mugSize": $("#addSize").val(),
+                "mugPattern": $("#addPattern").val(),
+                "mugNumber": $("#addNumber").val()
+            };
+
+            $.ajax({
+                url: '/CMS/workManage/add',
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                data: JSON.stringify(postBody),
+                dataType: 'json',
+                success: function (data) {
+                    renderManageOperationResult(data);
+                }
+            });
+
+        });
+
+        $("#delete").click(function () {
+            var postBody = {
+                "clientName": $("#deleteName").val(),
+                "jobID": $("#deleteID").val()
+            };
+
+            $.ajax({
+                url: '/CMS/workManage/delete',
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                data: JSON.stringify(postBody),
+                dataType: 'json',
+                success: function (data) {
+                    renderManageOperationResult(data);
+                }
+            });
+        });
+
+        $("#check").click(function () {
+            var postBody = {
+                "clientName": $("#checkName").val()
+            };
+
+            $.ajax({
+                url: '/CMS/workManage/check',
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                data: JSON.stringify(postBody),
+                dataType: 'json',
+                success: function (data) {
+                    renderWorkList(data);
+                }
+            });
+        });
+    });
+
+    function renderManageOperationResult(data) {
+        var resultArea = $("#resultArea");
+        $(resultArea).empty();
+        var header = document.createElement("p");
+        var content = document.createElement("p");
+        $(header).text("Manage resultMessage from client is: ");
+        $(content).text(data.resultMessage);
+        $(resultArea).append(header);
+        $(resultArea).append(content);
+    }
+
+    function renderWorkList(data) {
+        var workList = data.workList;
+        var resultArea = $("#resultArea");
+        $(resultArea).empty();
+        for (var i = 0; i < workList.length; i++) {
+            var job = workList[i];
+            var jobID = job.jobID;
+            var mugColor = job.mugColor;
+            var mugPattern = job.mugPattern;
+            var mugSize = job.mugSize;
+            var mugNumber = job.mugNumber;
+            var header = document.createElement("p");
+            var content = document.createElement("p");
+            $(header).text("jobID: " + jobID);
+            $(content).text("jobParameter: " + mugColor + "; " + mugPattern + "; " + mugSize + "; " + mugNumber);
+            $(resultArea).append(header);
+            $(resultArea).append(content);
+            $(resultArea).append(document.createElement("br"));
+        }
+    }
+
+    function renderDiscoverInfo(data) {
+        var resultArea = $("#resultArea");
+        $(resultArea).empty();
+        var result = document.createElement("p");
+        var message = "The client can accept new Job is: ";
+        var count = 0;
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].clientObjectStatus === "ON") {
+                message = message + data[i].clientName + "; ";
+                count++;
+            }
+        }
+        if (count == 0) {
+            message = "There is no client can accept new job.";
+        }
+        $(result).text(message);
+        $(resultArea).append(result);
+    }
+
+</script>
+
+</html>

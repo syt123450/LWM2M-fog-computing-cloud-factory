@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LWM2MClientCMS</title>
+    <link rel="stylesheet" href="../CSS/bootstrap.min.css">
+    <script src="../JS/jquery.min.js"></script>
+    <script src="../JS/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../CSS/check.css">
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <nav style="background-color: #d5efff" class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand">LWM2M Client CMS</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li><a href="../index.html">Registration</a></li>
+                        <li class="active"><a>Bootstrap</a></li>
+                        <li><a href="sensor.html">Environment Sensor</a></li>
+                        <li><a href="report.html">Report</a></li>
+                        <li><a href="payment.html">Payment</a></li>
+                        <li><a href="workList.html">Check</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+    <main>
+
+        <div class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    Bootstrap LWM2M Client
+                </h4>
+            </header>
+            <div href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">
+                    User Guide
+                </h4>
+                <p class="list-group-item-text">
+                    1. You can check bootstrap information.<br>
+                    2. You can delete the bootstrap information.<br>
+                    3. You can boot the client.
+                </p>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-4"><h4>check object bootstrap information:</h4></div>
+                    <div class="col-sm-4">
+                        <button id="check" class="btn btn-default" type="button">CHECK</button>
+                    </div>
+                </div>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-4"><h4>Client initiated bootstrap:</h4></div>
+                    <div class="col-sm-4">
+                        <button id="boot" class="btn btn-default" type="button">BOOT</button>
+                    </div>
+                </div>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-4"><h4>Delete bootstrap data:</h4></div>
+                    <div class="col-sm-4">
+                        <button id="delete" class="btn btn-default" type="button">DELETE</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    Bootstrap Result
+                </h4>
+            </header>
+            <div id="resultArea" class="list-group-item table-responsive">
+                <table style="display: none" class="table table-striped">
+                    <caption style="text-align: center;font-size: 20px;">Bootstrap Information</caption>
+                    <thead>
+                    <tr>
+                        <th>Server Name</th>
+                        <th>New Registration Url</th>
+                        <th>Update Registration Url</th>
+                        <th>Delete Registration Url</th>
+                        <th>Reporter Url</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+</div>
+
+<script>
+
+    $(function () {
+        $("#check").click(function () {
+            console.log("get Bootstrap data.");
+            $.ajax({
+                url: '/CMS/check/bootstrap',
+                type: 'GET',
+                async: true,
+                dataType: 'json',
+                success: function (data) {
+                    renderBootstrapInfo(data);
+                }
+            });
+        });
+
+        $("#boot").click(function () {
+            console.log("boot.");
+            $.ajax({
+                url: '/CMS/bootstrap/client',
+                type: 'GET',
+                async: true,
+                dataType: 'json',
+                success: function (data) {
+                    var resultArea = $("#resultArea");
+                    $(resultArea).empty();
+                    var result = document.createElement("p");
+                    $(result).text(data.information);
+                    $(resultArea).append(result);
+                }
+            });
+        });
+
+        $("#delete").click(function () {
+            console.log("delete Bootstrap data.");
+            $.ajax({
+                url: '/CMS/bootstrap/delete',
+                type: 'GET',
+                async: true,
+                dataType: 'json',
+                success: function (data) {
+                    var resultArea = $("#resultArea");
+                    $(resultArea).empty();
+                    var result = document.createElement("p");
+                    $(result).text(data.resultMessage);
+                    $(resultArea).append(result);
+                }
+            });
+        });
+    });
+
+    function renderBootstrapInfo(data) {
+        console.log(data);
+        var resultArea = $("#resultArea tbody");
+        $(resultArea).empty();
+        for (var i = 0; i < data.length; i++) {
+
+            var bootstrapData = data[i];
+            var serverName = bootstrapData.serverName;
+            var newRegistrationUrl = bootstrapData.newRegistrationUrl;
+            var updateRegistrationUrl = bootstrapData.updateRegistrationUrl;
+            var deRegistrationUrl = bootstrapData.deRegistrationUrl;
+            var reporterUrl = bootstrapData.reporterUrl;
+
+            var tableLine = document.createElement("tr");
+            var serverNameItem = document.createElement("td");
+            $(serverNameItem).text(serverName);
+            var newRegistrationUrlItem = document.createElement("td");
+            $(newRegistrationUrlItem).text(newRegistrationUrl);
+            var updateRegistrationUrlItem = document.createElement("td");
+            $(updateRegistrationUrlItem).text(updateRegistrationUrl);
+            var deRegistrationUrlItem = document.createElement("td");
+            $(deRegistrationUrlItem).text(deRegistrationUrl);
+            var reporterUrlItem = document.createElement("td");
+            $(reporterUrlItem).text(reporterUrl);
+
+            $(tableLine).append(serverNameItem);
+            $(tableLine).append(newRegistrationUrlItem);
+            $(tableLine).append(updateRegistrationUrlItem);
+            $(tableLine).append(deRegistrationUrlItem);
+            $(tableLine).append(reporterUrlItem);
+
+            $(resultArea).append(tableLine);
+        }
+
+        $("#resultArea table").show();
+    }
+
+</script>
+
+</body>
+</html>

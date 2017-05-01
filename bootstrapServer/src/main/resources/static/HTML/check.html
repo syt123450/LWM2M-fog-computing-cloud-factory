@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BootstrapServerManagement</title>
+    <link rel="stylesheet" href="../CSS/bootstrap.min.css">
+    <script src="../JS/jquery.min.js"></script>
+    <script src="../JS/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../CSS/check.css">
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand">Bootstrap Server CMS</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li><a href="../index.html">Bootstrap</a></li>
+                        <li><a href="management.html">Management</a></li>
+                        <li class="active"><a>Check</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+
+        <div class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    Server Initiated Bootstrap
+                </h4>
+            </header>
+            <div href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">
+                    User Guide
+                </h4>
+                <p class="list-group-item-text">
+                    1. You can check bootstrap clients information use check client button.<br>
+                    1. You can check bootstrap servers information use check bootstrap button.
+                </p>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-4"><h4>check clients bootstrap information:</h4></div>
+                    <div class="col-sm-4">
+                        <button class="btn btn-default" type="button">CHECK</button>
+                    </div>
+                </div>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-4"><h4>check server bootstrap information:</h4></div>
+                    <div class="col-sm-4">
+                        <button class="btn btn-default" type="button">CHECK</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="bootInformation" class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    Check Result
+                </h4>
+            </header>
+            <div class="list-group-item">
+                <p>Bootstrap successfully</p>
+            </div>
+        </div>
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LWM2MClientCMS</title>
+    <link rel="stylesheet" href="../CSS/bootstrap.min.css">
+    <script src="../JS/jquery.min.js"></script>
+    <script src="../JS/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../CSS/check.css">
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <nav style="background-color: #d5efff" class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand">LWM2M Client CMS</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li><a href="../index.html">Registration</a></li>
+                        <li><a href="bootstrap.html">Bootstrap</a></li>
+                        <li><a href="sensor.html">Environment Sensor</a></li>
+                        <li class="active"><a>Report</a></li>
+                        <li><a href="payment.html">Payment</a></li>
+                        <li><a href="workList.html">Check</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+    <main>
+
+        <div class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    Report Section
+                </h4>
+            </header>
+            <div href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">
+                    User Guide
+                </h4>
+                <p class="list-group-item-text">
+                    1. You can use this report section to get report.<br>
+                    2. The report contains the runtime info of your machine.<br>
+                    3. Only the premium user can get report.<br>
+                    4. You can click the "Create" button to create the latest report.<br>
+                    5. You can click the "Download" button to download the report.
+                </p>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <h4>Report Operation :</h4>
+                    </div>
+                    <div class="col-sm-2">
+                        <button id="create" class="btn btn-default" type="button">Create</button>
+                    </div>
+                    <div class="col-sm-2">
+                        <button id="download" class="btn btn-default" type="button"><a
+                                href="http://localhost:8000/reporter/download?clientName=client1">Download</a></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    Report Result
+                </h4>
+            </header>
+            <div id="resultArea" class="list-group-item"></div>
+        </div>
+    </main>
+
+
+</div>
+
+<script>
+
+    $(function () {
+
+        $("#create").click(function () {
+            $.ajax({
+                url: '/CMS/report/create',
+                type: 'GET',
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    renderResult(data);
+                }
+            });
+        });
+    });
+
+    function renderResult(data) {
+        var resultArea = $("#resultArea");
+        $(resultArea).empty();
+        var result = document.createElement("p");
+        $(result).text(data.resultMessage);
+        $(resultArea).append(result);
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LWM2MServerCMS</title>
+    <link rel="stylesheet" href="../CSS/bootstrap.min.css">
+    <script src="../JS/jquery.min.js"></script>
+    <script src="../JS/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../CSS/check.css">
+    <style>
+        #resultArea table caption {
+            text-align: center;
+            font-size: 20px;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <nav style="background-color: #fff7d7" class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand">LWM2M Server CMS</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li><a href="../index.html">Resource Operator</a></li>
+                        <li><a href="workManagement.html">Work Management</a></li>
+                        <li class="active"><a>Report</a></li>
+                        <li><a href="check.html">Check</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <header class="list-group-item active">
+            <h4 class="list-group-item-heading">
+                Manage LWM2M Report Section
+            </h4>
+        </header>
+        <div class="list-group">
+            <div href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">
+                    User Guide
+                </h4>
+                <p class="list-group-item-text">
+                    1. You can observe client by input the client Name and click the "Observe" button.<br>
+                    2. You can cancel observation by input the client Name and click the "Cancel" button.<br>
+                    3. You can check the client report by input the client name and click the "Check" button.<br>
+                    4. The check operation will periodically show the report message.
+                </p>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <h4>Operator :</h4>
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="input-group">
+                            <input id="clientName" type="text" class="form-control" placeholder="ClientName">
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <button id="observe" class="btn btn-default" type="button">Observe</button>
+                    </div>
+                    <div class="col-sm-2">
+                        <button id="cancel" class="btn btn-default" type="button">Cancel</button>
+                    </div>
+                    <div class="col-sm-2">
+                        <button id="check" class="btn btn-default" type="button">Check</button>
+                    </div>
+                    <div class="col-sm-2">
+                        <button id="clear" class="btn btn-default" type="button">Clear</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    Report Operation Result
+                </h4>
+            </header>
+            <div id="resultArea" class="list-group-item">
+                <!--<table class="table table-striped">-->
+                    <!--<caption>Job List</caption>-->
+                    <!--<thead>-->
+                    <!--<tr>-->
+                        <!--<th>Client Name</th>-->
+                        <!--<th>Executor Status</th>-->
+                        <!--<th>Working Status</th>-->
+                        <!--<th>JobID</th>-->
+                        <!--<th>Left Number</th>-->
+                        <!--<th>Report time</th>-->
+                    <!--</tr>-->
+                    <!--</thead>-->
+                    <!--<tbody>-->
+                    <!--&lt;!&ndash;<tr>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<td>8</td>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<td>green</td>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<td>small</td>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<td>animal</td>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<td>176</td>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</tr>&ndash;&gt;-->
+
+                    <!--private String clientName;-->
+                    <!--private String executorStatus;-->
+                    <!--private String workingStatus;-->
+                    <!--private int JobID;-->
+                    <!--private int leftNum;-->
+                    <!--private String time;-->
+                    <!--</tbody>-->
+                <!--</table>-->
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script>
+
+    var sh;
+
+    $(function () {
+
+        $("#observe").click(function () {
+            var postBody = {
+                "clientName": $("#clientName").val()
+            };
+
+            $.ajax({
+                url: '/CMS/report/observe',
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                data: JSON.stringify(postBody),
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    renderOperationResult(data);
+                }
+            });
+        });
+
+        $("#cancel").click(function () {
+            var postBody = {
+                "clientName": $("#clientName").val()
+            };
+
+            $.ajax({
+                url: '/CMS/report/cancel',
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                data: JSON.stringify(postBody),
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    renderOperationResult(data);
+                }
+            });
+        });
+
+        $("#check").click(function () {
+//            var postBody = {
+//                "clientName": $("#clientName").val()
+//            };
+//
+//            $.ajax({
+//                url: '/CMS/check/reporter',
+//                type: 'POST',
+//                contentType: "application/json; charset=utf-8",
+//                async: true,
+//                data: JSON.stringify(postBody),
+//                dataType: 'json',
+//                success: function (data) {
+//                    console.log(data);
+//                    renderReporter(data);
+//                }
+//            });
+            sh = setInterval(getAndShowReport, 2000);
+        });
+
+        $("#clear").click(function() {
+            clearInterval(sh);
+            $("#resultArea").empty();
+        });
+    });
+
+    function renderOperationResult(data) {
+        var resultArea = $("#resultArea");
+        $(resultArea).empty();
+        var resultMessage = document.createElement("p");
+        $(resultMessage).text(data.resultMessage);
+        $(resultArea).append(resultMessage);
+    }
+
+    function getAndShowReport() {
+        var postBody = {
+            "clientName": $("#clientName").val()
+        };
+        console.log(postBody);
+
+        $.ajax({
+            url: '/CMS/check/reporter',
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+            async: true,
+            data: JSON.stringify(postBody),
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                renderReporter(data);
+            }
+        });
+    }
+
+    function renderReporter(data) {
+        var reportTable = document.createElement("table");
+        $(reportTable).attr("class", "table table-striped");
+        $(reportTable).append("<caption>Job List</caption><thead><tr><th>Client Name</th><th>Executor Status</th><th>Working Status</th><th>JobID</th><th>Left Number</th><th>Report time</th></tr></thead>");
+        var tbody = document.createElement("tbody");
+        for (var i = 0; i < data.length; i ++) {
+            var report = data[i];
+            var clientName = report.clientName;
+            var executorStatus = report.executorStatus;
+            var workingStatus = report.workingStatus;
+            var JobID = report.JobID;
+            var leftNum = report.leftNum;
+            var time = report.time;
+
+            var tableLine = document.createElement("tr");
+            var clientNameItem = document.createElement("td");
+            $(clientNameItem).text(clientName);
+            var executorStatusItem = document.createElement("td");
+            $(executorStatusItem).text(executorStatus);
+            var workingStatusItem = document.createElement("td");
+            $(workingStatusItem).text(workingStatus);
+            var JobIDItem = document.createElement("td");
+            $(JobIDItem).text(JobID);
+            var leftNumItem = document.createElement("td");
+            $(leftNumItem).text(leftNum);
+            var timeItem  = document.createElement("td");
+            $(timeItem).text(time);
+
+            $(tableLine).append(clientNameItem);
+            $(tableLine).append(executorStatusItem);
+            $(tableLine).append(workingStatusItem);
+            $(tableLine).append(JobIDItem);
+            $(tableLine).append(leftNumItem);
+            $(tableLine).append(timeItem);
+
+            $(tbody).append(tableLine);
+        }
+        $(reportTable).append(tbody);
+        var resultArea = $("#resultArea");
+        $(resultArea).empty();
+        $(resultArea).append(reportTable);
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BootstrapServerManagement</title>
+    <link rel="stylesheet" href="../CSS/bootstrap.min.css">
+    <script src="../JS/jquery.min.js"></script>
+    <script src="../JS/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../CSS/management.css">
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand">Bootstrap Server CMS</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li><a href="../index.html">Bootstrap</a></li>
+                        <li class="active"><a>Management</a></li>
+                        <li><a href="check.html">Check</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+
+        <div class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    Delete server from bootstrap
+                </h4>
+            </header>
+            <div href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">
+                    User Guide
+                </h4>
+                <p class="list-group-item-text">
+                    1. You can delete server from bootstrap server here.<br>
+                    1. You must input the name of the server you want to delete.
+                </p>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-3"><h4>server name(required):</h4></div>
+                    <div class="col-sm-4">
+                        <div class="input-group">
+                            <input id="deleteInput" type="text" class="form-control">
+                            <span class="input-group-btn">
+						<button id="delete" class="btn btn-default" type="button">
+							Delete
+						</button>
+					</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    add server to bootstrap
+                </h4>
+            </header>
+            <div href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">
+                    User Guide
+                </h4>
+                <p class="list-group-item-text">
+                    1. You can add server to bootstrap server here.<br>
+                    1. You must input the name of the server and the registration urls to bootstrap.
+                </p>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-4"><h4>server name(required):</h4></div>
+                    <div class="col-sm-3">
+                        <input id="addName" type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-4"><h4>New Registration URL(required):</h4></div>
+                    <div class="col-sm-3">
+                        <input id="addNew" type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-4"><h4>Delete Degistration URL(required):</h4></div>
+                    <div class="col-sm-3">
+                        <input id="addDe" type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-4"><h4>Update Registration URL(required):</h4></div>
+                    <div class="col-sm-3">
+                        <input id="addUpdate" type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="col-sm-offset-4">
+                    <button id="add" class="btn btn-default" type="button">ADD</button>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="bootInformation" class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    Management Result
+                </h4>
+            </header>
+            <div id="manageResult" class="list-group-item">
+            </div>
+        </div>
+    </main>
+
+</div>
+
+<script>
+
+    $(function () {
+
+        $("#delete").click(function () {
+            var postBody = {
+                "serverName": $("#deleteInput").val()
+            };
+
+            $.ajax({
+                url: '/CMS/serverManage/delete',
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                data: JSON.stringify(postBody),
+                dataType: 'json',
+                success: function (data) {
+                    renderResult(data)
+                }
+            });
+        });
+
+        $("#add").click(function () {
+
+            var postBody = {
+                "serverName": $("#addName").val(),
+                "newRegistrationUrl": $("#addNew").val(),
+                "updateRegistrationUrl": $("#addDe").val(),
+                "deRegistrationUrl": $("#addUpdate").val()
+            };
+
+            $.ajax({
+                url: '/CMS/serverManage/add',
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                data: JSON.stringify(postBody),
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    renderResult(data)
+                }
+            });
+
+        });
+    });
+
+    function renderResult(data) {
+        var manageResult = $("#manageResult");
+        var manageInfo = document.createElement("p");
+        $(manageInfo).text(data.information);
+        $(manageResult).empty();
+        $(manageResult).append(manageInfo);
+    }
+
+</script>
+
+</body>
+</html>

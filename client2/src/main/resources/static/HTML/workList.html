@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LWM2MClientCMS</title>
+    <link rel="stylesheet" href="../CSS/bootstrap.min.css">
+    <script src="../JS/jquery.min.js"></script>
+    <script src="../JS/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../CSS/check.css">
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <nav style="background-color: #d5efff" class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand">LWM2M Client CMS</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li><a href="../index.html">Registration</a></li>
+                        <li><a href="bootstrap.html">Bootstrap</a></li>
+                        <li><a href="sensor.html">Environment Sensor</a></li>
+                        <li><a href="report.html">Report</a></li>
+                        <li><a href="payment.html">Payment</a></li>
+                        <li class="active"><a>Check</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+
+        <div class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    Check LWM2M Client Information
+                </h4>
+            </header>
+            <div href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">
+                    User Guide
+                </h4>
+                <p class="list-group-item-text">
+                    1. You can check the workList of the client.
+                </p>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-4"><h4>check workList:</h4></div>
+                    <div class="col-sm-4">
+                        <button id="workList" class="btn btn-default" type="button">CHECK</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    Check Result
+                </h4>
+            </header>
+            <div id="resultArea" class="list-group-item">
+                <table style="display:none"class="table table-striped">
+                    <caption style="text-align: center;font-size: 20px;">Job List</caption>
+                    <thead>
+                    <tr>
+                        <th>JobID</th>
+                        <th>Mug Color</th>
+                        <th>Mug Size</th>
+                        <th>Mug Pattern</th>
+                        <th>Mug Number</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!--<tr>-->
+                        <!--<td>8</td>-->
+                        <!--<td>green</td>-->
+                        <!--<td>small</td>-->
+                        <!--<td>animal</td>-->
+                        <!--<td>176</td>-->
+                    <!--</tr>-->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+</div>
+
+</body>
+
+<script>
+
+    $(function() {
+
+        $("#workList").click(function() {
+            console.log("Get workList data.");
+            $.ajax({
+                url: '/workListHolder/readList',
+                type: 'GET',
+                async: true,
+                dataType: 'json',
+                success: function (data) {
+                    renderWorkList(data);
+                }
+            });
+        });
+    });
+
+    function renderWorkList(data) {
+        var workList = data.workList;
+        var resultArea = $("#resultArea tbody");
+        $(resultArea).empty();
+        for (var i = 0; i < workList.length; i ++) {
+            var job = workList[i];
+            var jobID = job.jobID;
+            var mugColor = job.mugColor;
+            var mugPattern = job.mugPattern;
+            var mugSize = job.mugSize;
+            var mugNumber = job.mugNumber;
+
+            var tableLine = document.createElement("tr");
+            var jobIDItem = document.createElement("td");
+            $(jobIDItem).text(jobID);
+            var mugColorItem = document.createElement("td");
+            $(mugColorItem).text(mugColor);
+            var mugPatternItem = document.createElement("td");
+            $(mugPatternItem).text(mugPattern);
+            var mugSizeItem = document.createElement("td");
+            $(mugSizeItem).text(mugSize);
+            var mugNumberItem = document.createElement("td");
+            $(mugNumberItem).text(mugNumber);
+
+            $(tableLine).append(jobIDItem);
+            $(tableLine).append(mugColorItem);
+            $(tableLine).append(mugPatternItem);
+            $(tableLine).append(mugSizeItem);
+            $(tableLine).append(mugNumberItem);
+
+            $(resultArea).append(tableLine);
+        }
+        $("#resultArea table").show();
+    }
+
+</script>
+
+</html>

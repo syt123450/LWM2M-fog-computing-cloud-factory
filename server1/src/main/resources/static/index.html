@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LWM2MServerCMS</title>
+    <link rel="stylesheet" href="CSS/bootstrap.min.css">
+    <script src="JS/jquery.min.js"></script>
+    <script src="JS/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="CSS/index.css">
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <nav style="background-color: #fff7d7" class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand">LWM2M Server CMS</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a>Resource Operator</a></li>
+                        <li><a href="HTML/workManagement.html">Work Management</a></li>
+                        <li><a href="HTML/report.html">Report</a></li>
+                        <li><a href="HTML/check.html">Check</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+
+        <div class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    Client1
+                </h4>
+            </header>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-2"><h4>Executor :</h4></div>
+                    <div class="col-sm-2">
+                        <button id="executorOn" class="btn btn-default" type="button">TURN ON</button>
+                    </div>
+                    <div class="col-sm-2">
+                        <button id="executorOff" class="btn btn-default" type="button">TURN OFF</button>
+                    </div>
+                    <div class="col-sm-2">
+                        <button id="executorAttribute" class="btn btn-default" type="button">READ ATTRIBUTE</button>
+                    </div>
+                </div>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-2"><h4>WorkListHolder :</h4></div>
+                    <div class="col-sm-2">
+                        <button id="holderOn" class="btn btn-default" type="button">TURN ON</button>
+                    </div>
+                    <div class="col-sm-2">
+                        <button id="holderOff" class="btn btn-default" type="button">TURN OFF</button>
+                    </div>
+                    <div class="col-sm-2">
+                        <button id="holderAttribute" class="btn btn-default" type="button">READ ATTRIBUTE</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="bootInformation" class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    Operation Result
+                </h4>
+            </header>
+            <div id="resultArea" class="list-group-item"></div>
+        </div>
+    </main>
+
+</div>
+
+<script>
+
+    $(function () {
+
+        $("#executorOn").click(function() {
+
+            var postBody = {
+                "clientName": "client1",
+                "resourceName": "executor",
+                "switchOperation": "turn_on"
+            };
+
+            sendSwitchRequest(postBody);
+        });
+
+        $("#executorOff").click(function() {
+            var postBody = {
+                "clientName": "client1",
+                "resourceName": "executor",
+                "switchOperation": "turn_off"
+            };
+
+            sendSwitchRequest(postBody);
+        });
+
+        $("#holderOn").click(function() {
+            var postBody = {
+                "clientName": "client1",
+                "resourceName": "workListHolder",
+                "switchOperation": "turn_on"
+            };
+
+            sendSwitchRequest(postBody);
+        });
+
+        $("#holderOff").click(function() {
+            var postBody = {
+                "clientName": "client1",
+                "resourceName": "workListHolder",
+                "switchOperation": "turn_off"
+            };
+
+            sendSwitchRequest(postBody);
+        });
+
+        $("#executorAttribute").click(function() {
+            var postBody = {
+                "clientName": "client1",
+                "resourceName": "executor"
+            };
+
+            sendReadAttributeRequest(postBody);
+        });
+
+        $("#holderAttribute").click(function() {
+            var postBody = {
+                "clientName": "client1",
+                "resourceName": "workListHolder"
+            };
+
+            sendReadAttributeRequest(postBody);
+
+        });
+    });
+
+    function sendSwitchRequest(postBody) {
+        $.ajax({
+            url: '/CMS/operator/switcher',
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+            async: true,
+            data: JSON.stringify(postBody),
+            dataType: 'json',
+            success: function (data) {
+                renderOperationResult(data);
+            }
+        });
+    }
+
+    function sendReadAttributeRequest(postBody) {
+        $.ajax({
+            url: '/CMS/operator/readAttribute',
+            type: 'POST',
+            contentType: "application/json; charset=utf-8",
+            async: true,
+            data: JSON.stringify(postBody),
+            dataType: 'json',
+            success: function (data) {
+                renderAttribute(data);
+            }
+        });
+    }
+
+    function renderOperationResult(data) {
+        var resultArea = $("#resultArea");
+        $(resultArea).empty();
+        var resultHeader = document.createElement("p");
+        var resultContent = document.createElement("p");
+        $(resultHeader).text("resultMessage from client:");
+        $(resultContent).text(data.resultMessage);
+        $(resultArea).append(resultHeader);
+        $(resultArea).append(resultContent);
+    }
+
+    function renderAttribute(data) {
+        var resultArea = $("#resultArea");
+        $(resultArea).empty();
+        var resourceNameHint = document.createElement("p");
+        var resourceName = document.createElement("p");
+        var attributeHint = document.createElement("p");
+        var attribute = document.createElement("p");
+        $(resourceNameHint).text("The resourceName is: ");
+        $(resourceName).text(data.resourceName);
+        $(attributeHint).text("The attribute text is:");
+        $(attribute).text(data.resourceStatus);
+        $(resultArea).append(resourceNameHint);
+        $(resultArea).append(resourceName);
+        $(resultArea).append(attributeHint);
+        $(resultArea).append(attribute);
+    }
+
+</script>
+
+</body>
+</html>

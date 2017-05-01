@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LWM2MServerCMS</title>
+    <link rel="stylesheet" href="../CSS/bootstrap.min.css">
+    <script src="../JS/jquery.min.js"></script>
+    <script src="../JS/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../CSS/check.css">
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <nav style="background-color: #fff7d7" class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand">LWM2M Server CMS</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li><a href="../index.html">Resource Operator</a></li>
+                        <li><a href="workManagement.html">Work Management</a></li>
+                        <li><a href="report.html">Report</a></li>
+                        <li class="active"><a>Check</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+
+        <div class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    Check LWM2M Client Registration Information
+                </h4>
+            </header>
+            <div href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">
+                    User Guide
+                </h4>
+                <p class="list-group-item-text">
+                    1. You can check all client registration information of the server.<br>
+                    2. You can check one specific registration information of the server.
+                </p>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-4"><h4>check all registration information:</h4></div>
+                    <div class="col-sm-4">
+                        <button id="allInfo" class="btn btn-default" type="button">CHECK</button>
+                    </div>
+                </div>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-4"><h4>check one registration information:</h4></div>
+                    <div class="col-sm-4">
+                        <div class="input-group">
+                            <input id="clientName" type="text" class="form-control" placeholder="Client Name">
+                            <span class="input-group-btn">
+						<button id="oneInfo" class="btn btn-default" type="button">
+							CHECK
+						</button>
+					</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="bootInformation" class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    Check Result
+                </h4>
+            </header>
+            <div id="resultArea" class="list-group-item">
+            </div>
+        </div>
+    </main>
+
+</div>
+
+</body>
+
+<script>
+
+    $(function () {
+        $("#allInfo").click(function() {
+            $.ajax({
+                url: '/CMS/check/allClients',
+                type: 'GET',
+                async: true,
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    var resultArea = $("#resultArea");
+                    $(resultArea).empty();
+                    for (var i = 0; i < data.length; i++) {
+                        renderClientInfo(data[i]);
+                        $("#resultArea").append(document.createElement("br"));
+                    }
+                }
+            });
+        });
+
+        $("#oneInfo").click(function() {
+            var postBody = {
+                "clientName": $("#clientName").val()
+            };
+
+            $.ajax({
+                url: '/CMS/check/oneClient',
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                data: JSON.stringify(postBody),
+                dataType: 'json',
+                success: function (data) {
+                    var resultArea = $("#resultArea");
+                    $(resultArea).empty();
+                    console.log(data);
+                    renderClientInfo(data);
+                }
+            });
+        });
+    });
+
+    function renderClientInfo(data) {
+        var resultArea = $("#resultArea");
+        var name = document.createElement("p");
+        $(name).text("clientName:" + data.clientName);
+        var bindingMode = document.createElement("p");
+        $(bindingMode).text("bindingMode:" + data.bindingMode);
+        var version = document.createElement("p");
+        $(version).text("version:" + data.version);
+        var lifeTime = document.createElement("p");
+        $(lifeTime).text("lifeTime:" + data.lifeTime);
+        var address = document.createElement("p");
+        $(address).text("address:" + data.address);
+        var resourceTitle = document.createElement("p");
+        $(resourceTitle).text("Client resource List");
+        var partialBrace1 = document.createElement("p");
+        $(partialBrace1).text("{");
+        $(resultArea).append(name);
+        $(resultArea).append(bindingMode);
+        $(resultArea).append(version);
+        $(resultArea).append(lifeTime);
+        $(resultArea).append(address);
+        $(resultArea).append(resourceTitle);
+        $(resultArea).append(partialBrace1);
+        var resourceList = data.resourceAddressList;
+        for (var i = 0; i < resourceList.length; i++) {
+            var resource = resourceList[i];
+            var resourceItem = document.createElement("p");
+            $(resourceItem).text("[ " + " resourceID: " + resource.resourceID +
+                ";   resourceName: " + resource.resourceName +
+                ";   address: " + resource.address +
+                ";   operation: " + resource.operation + "]");
+            $(resultArea).append(resourceItem);
+            $(resultArea).append(document.createElement("br"));
+        }
+        var partialBrace2 = document.createElement("p");
+        $(partialBrace2).text("}");
+        $(resultArea).append(partialBrace2);
+    }
+
+</script>
+
+</html>

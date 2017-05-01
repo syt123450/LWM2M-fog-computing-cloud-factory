@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BootstrapServerManagement</title>
+    <link rel="stylesheet" href="CSS/bootstrap.min.css">
+    <script src="JS/jquery.min.js"></script>
+    <script src="JS/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="CSS/index.css">
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand">Central Server CMS</a>
+                </div>
+                <div>
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a>Bootstrap</a></li>
+                        <li><a href="HTML/management.html">Management</a></li>
+                        <li><a href="HTML/check.html">Check</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+
+        <div class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    Server Initiated Bootstrap
+                </h4>
+            </header>
+            <div href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">
+                    User Guide
+                </h4>
+                <p class="list-group-item-text">
+                    1. You can bootstrap all clients or one specific client.<br>
+                    2. You can bootstrap client with the information of one server or all server.<br>
+                    3. If you do not input client name, CMS will bootstrap all client.<br>
+                    4. If you do not input server name, CMS will bootstrap with the information of all server.
+                </p>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-3"><h4>client name(optional):</h4></div>
+                    <div class="col-sm-4">
+                        <input id="clientName" type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="row">
+                    <div class="col-sm-3"><h4>server name(optional):</h4></div>
+                    <div class="col-sm-4">
+                        <input id="serverName" type="text" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div href="#" class="list-group-item">
+                <div class="col-sm-offset-3">
+                    <button id="boot" class="btn btn-default" type="button">BOOT</button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="bootInformation" class="list-group">
+            <header class="list-group-item active">
+                <h4 class="list-group-item-heading">
+                    Bootstrap Result
+                </h4>
+            </header>
+            <div id="resultArea" class="list-group-item">
+            </div>
+        </div>
+    </main>
+
+</div>
+
+<script>
+    
+    $(function () {
+
+        $("#boot").click(function () {
+
+            var postBody = {
+                "clientName": $("#clientName").val(),
+                "serverName": $("#serverName").val()
+            };
+
+            $.ajax({
+                url: '/CMS/serverInitiated',
+                type: 'POST',
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                data: JSON.stringify(postBody),
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data.resultList);
+                    renderBootstrapResult(data.resultList);
+                }
+            });
+        });
+
+    });
+
+    function renderBootstrapResult(resultList) {
+        var resultArea = $("#resultArea");
+        $(resultArea).empty();
+        for(var i = 0; i < resultList.length; i++) {
+            var result = resultList[i];
+            var clientName = document.createElement("p");
+            var bootstrapResult = document.createElement("p");
+            $(clientName).text("Client Name is: " + result.clientName);
+            $(bootstrapResult).text("Bootstrap result is: " + result.bootResult);
+            $(resultArea).append(clientName);
+            $(resultArea).append(bootstrapResult);
+        }
+    }
+
+</script>
+
+</body>
+</html>
